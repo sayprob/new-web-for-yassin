@@ -1,6 +1,6 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
-import { Plus, ArrowLeft, Settings, LogOut, Calendar, DollarSign, Moon, Sun, Edit3 } from 'lucide-react';
+import { Plus, ArrowLeft, Settings, LogOut, Calendar, DollarSign, Moon, Sun, Edit3, Download } from 'lucide-react';
 import { DonationData, Expense } from './types';
 import { loadDonationsFromFile, saveDonationsToFile, loadExpensesFromFile, saveExpensesToFile } from './utils/fileManager';
 import { AdminLogin } from './components/AdminLogin';
@@ -319,6 +319,31 @@ function App() {
     }
   };
 
+  const handleDownloadDonations = () => {
+    const dataStr = JSON.stringify(donations, null, 2);
+    const dataBlob = new Blob([dataStr], { type: 'application/json' });
+    const url = URL.createObjectURL(dataBlob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'donations.json';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
+  const handleDownloadExpenses = () => {
+    const dataStr = JSON.stringify(expenses, null, 2);
+    const dataBlob = new Blob([dataStr], { type: 'application/json' });
+    const url = URL.createObjectURL(dataBlob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'expenses.json';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
   const availableYears = getAvailableYears();
 
   if (isLoading) {
@@ -379,6 +404,22 @@ function App() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3-3m0 0l-3 3m3-3v12" />
               </svg>
               {isSyncing ? 'حفظ...' : 'حفظ'}
+            </button>
+            <button
+              onClick={handleDownloadDonations}
+              className={`${isDarkMode ? 'bg-slate-700 hover:bg-slate-600 text-purple-400' : 'bg-slate-200 hover:bg-slate-300 text-purple-600'} px-3 py-2 rounded-lg shadow-lg transition-colors duration-200 flex items-center gap-2 text-sm`}
+              title="تحميل ملف التبرعات"
+            >
+              <Download className="w-4 h-4" />
+              تبرعات
+            </button>
+            <button
+              onClick={handleDownloadExpenses}
+              className={`${isDarkMode ? 'bg-slate-700 hover:bg-slate-600 text-orange-400' : 'bg-slate-200 hover:bg-slate-300 text-orange-600'} px-3 py-2 rounded-lg shadow-lg transition-colors duration-200 flex items-center gap-2 text-sm`}
+              title="تحميل ملف النفقات"
+            >
+              <Download className="w-4 h-4" />
+              نفقات
             </button>
           </div>
         )}
