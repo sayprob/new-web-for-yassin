@@ -155,7 +155,7 @@ export const saveDonationsToFile = async (donations: DonationData): Promise<void
 
     try {
       const content = JSON.stringify(donations, null, 2);
-      const encodedContent = btoa(content);
+      const encodedContent = btoa(unescape(encodeURIComponent(content)));
       const sha = await getFileSha(GITHUB_CONFIG.donationsPath);
       
       const url = `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.donationsPath}`;
@@ -203,7 +203,7 @@ export const saveExpensesToFile = async (expenses: Expense[]): Promise<void> => 
 
     try {
       const content = JSON.stringify(expenses, null, 2);
-      const encodedContent = btoa(content);
+      const encodedContent = btoa(unescape(encodeURIComponent(content)));
       const sha = await getFileSha(GITHUB_CONFIG.expensesPath);
       
       const url = `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.expensesPath}`;
